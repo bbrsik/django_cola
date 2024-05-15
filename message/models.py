@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from user.models import Profile
 
 
 class Chat(models.Model):
@@ -14,7 +15,7 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

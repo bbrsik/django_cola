@@ -1,20 +1,25 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Chats</title>
-<style>
-    html * {
-            font-size: 20px;
-            line-height: 1.5;
-            color: #202013;
-            font-family: sans-serif;
-            }
-</style>
+    <meta charset="UTF-8">
+    <title>Chats</title>
+    <style>
+        html * {
+                font-size: 20px;
+                line-height: 1.5;
+                color: #202013;
+                font-family: sans-serif;
+                }
+    </style>
 </head>
 <body>
 <div style="margin-left: 10px; margin-top: 10px;">
     {% if user.is_authenticated %}
         <div style="color: green;">
             You are logged in as: {{ user.username }}
+            <form style="display: inline-block" action="/user/profile/">
+            <div><button type="submit">Edit profile</button></div>
+            </form>
             <form style="display: inline-block" action="/user/api/logout/">
             <div><button type="submit">Logout</button></div>
             </form>
@@ -29,6 +34,11 @@
     <div>Weather report for {{weather.location}}:</div>
     <div>{{weather.description}}</div>
     <div>Temperature: {{weather.temperature}}°C</div>
+</div>
+{% else %}
+<div style="margin-left: 10px; margin-top: 10px; margin-bottom: 30px">
+    <div style="color: darkred">Weather report is not available:</div>
+    <div style="color: darkred">your current location is set incorrectly.</div>
 </div>
 {% endif %}
 

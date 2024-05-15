@@ -1,7 +1,9 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.core.exceptions import ObjectDoesNotExist
 from message.serializers import serialize_chats, serialize_messages
 from message.models import Chat, Message
+from user.models import Profile
 from weather.models import Weather
 from weather.utility import should_update_weather, request_weather_data
 
@@ -28,16 +30,19 @@ def render_list(request):
     if not request.user.is_authenticated:
         return redirect('/user/login/')
     chats = serialize_chats(Chat.objects.all())
-
-    if should_update_weather():
+    profile = Profile.objects.get(user=request.user)
+    if should_update_weather(profile.current_location):
         try:
-            weather_data = request_weather_data()
+            weather_data = request_weather_data(profile.current_location)
             weather_to_save = Weather(**weather_data)
             weather_to_save.save()
         except Exception as e:
             print('Error while requesting weather', e)
+    try:
+        weather = Weather.objects.filter(location=profile.current_location).latest('created_at')
+    except ObjectDoesNotExist:
+        weather = None
 
-    weather = Weather.objects.all().order_by('created_at').last()
     context = {
         'chats': chats,
         'weather': weather,

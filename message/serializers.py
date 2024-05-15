@@ -18,7 +18,7 @@ def serialize_messages(qs: QuerySet):
     for message in qs:
         messages.append({
             'created_at': message.created_at.strftime("%D %H:%M:%S"),
-            'username': message.user.username,
+            'user': message.user,
             'text': message.text,
             'id': message.id,
             'replies_history': serialize_messages(message.get_replies_history())

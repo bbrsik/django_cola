@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from message.serializers import *
 from message.models import Badword
+from user.models import Profile
 
 
 @csrf_exempt
@@ -20,14 +21,13 @@ def create_message(request, chat_id):
         return JsonResponse({'message': 'Field "message" is required.'}, status=400)
 
     message = censor_badwords(message)
-
     chat = chat_id
     try:
         Chat.objects.get(id=chat)
     except Chat.DoesNotExist:
         return JsonResponse({'Chat does not exist.'}, status=400)
 
-    msg = Message(text=message, user=request.user, chat_id=chat)
+    msg = Message(text=message, user=Profile.objects.get(user=request.user), chat_id=chat)
     msg.save()
     return redirect(reverse("render_chat", kwargs={'chat_id': chat_id}))
 

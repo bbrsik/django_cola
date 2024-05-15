@@ -1,54 +1,56 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>{{ name }}</title>
-<style>
-html * {
-        font-size: 20px;
-        line-height: 1.5;
-        color: #202013;
-        font-family: sans-serif;
-        }
+    <meta charset="UTF-8">
+    <title>{{ name }}</title>
+    <style>
+        html * {
+                font-size: 20px;
+                line-height: 1.5;
+                color: #202013;
+                font-family: sans-serif;
+                }
 
-div.reply {
-        font-size: 10px;
-        padding: 5px;
-        margin: 7px;
-        border: 1px solid;
-        border-color: gray;
-        background-color: #B1FFCA;
-        word-wrap: break-word;
-        }
+        div.reply {
+                font-size: 10px;
+                padding: 5px;
+                margin: 7px;
+                border: 1px solid;
+                border-color: gray;
+                background-color: #B1FFCA;
+                word-wrap: break-word;
+                }
 
-div.message {
-        padding: 5px;
-        padding-right: 25px;
-        margin: 7px;
-        border: 1px solid;
-        border-color: gray;
-        background-color: white;
-        position: relative;
-        word-wrap: break-word;
-        }
+        div.message {
+                padding: 5px;
+                padding-right: 25px;
+                margin: 7px;
+                border: 1px solid;
+                border-color: gray;
+                background-color: white;
+                position: relative;
+                word-wrap: break-word;
+                }
 
-.form-delete {
-        display: inline-block;
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        }
+        .form-delete {
+                display: inline-block;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                }
 
-.button-delete {
-        font-size: 15px;
-        color: red;
-        border: none;
-        background-color: white;
-        padding: 0px 0px;
-        }
-</style>
+        .button-delete {
+                font-size: 15px;
+                color: red;
+                border: none;
+                background-color: white;
+                padding: 0px 0px;
+                }
+    </style>
 </head>
 <body>
 <div style="margin-bottom: 30px; margin-left: 10px; margin-top: 10px;">
-    <div style="color: green;">You are logged in as: {{ user.username }}</div>
+    <div style="color: green;">You are logged in as: {{ user }}</div>
     <div>Selected chat: {{ name }}</div>
     <div>Chat ID: {{ chat_id }}</div>
 </div>
@@ -60,8 +62,13 @@ div.message {
                     TO: {{ reply.username }}: {{ reply.text }}
                 </div>
             {% endfor %}
-        {{ message.username }}: {{ message.text }}
-            {% if user.username == message.username %}
+        <div>
+            {% if message.user.picture %}
+                <img src="/media/{{ message.user.picture }}" width="40" height="40" alt="{{ message.user }}s profile picture">
+            {% endif %}
+            {{ message.user.user }}: {{ message.text }}
+        </div>
+            {% if user == message.user.user %}
                 <form class="form-delete" action="/message/api/message/delete/{{message.id}}/" method="POST">
                     <button class="button-delete" type="submit">X</button>
                 </form>
@@ -77,10 +84,9 @@ div.message {
     Your message:
     <form action="/message/api/message/create/{{chat_id}}/" method="POST">
         <input name="message" autocomplete="off">
-        <button type="submit">send</button>
+        <button type="submit">Send</button>
     </form>
     <a href="/message/chats/">Back to All Chats</a>
 </div>
-
 </body>
 </html>
